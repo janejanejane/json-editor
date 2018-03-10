@@ -12,12 +12,26 @@ class Main extends React.Component {
             info: null,
         };
         this.handleUpdate = this.handeUpdate.bind( this );
+        this.resetStates = this.resetStates.bind( this );
     }
 
     handeUpdate( message, type ) {
+        let value = ( type === 'info' ) ? Object.assign( {}, message ) : message.toString();
+        
+        this.resetStates();
+
         this.setState( ( prevState, props ) => {
             return {
-                [type]: Object.assign( {}, message ),
+                [type]: value,
+            };
+        } );
+    }
+
+    resetStates() {
+        this.setState( ( prevState, props) => {
+            return {
+                error: null,
+                info: null,
             };
         } );
     }
