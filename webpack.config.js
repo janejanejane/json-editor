@@ -37,7 +37,10 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'Main',
             template: 'index.hbs',
-        })
+        }),
+        new webpack.DefinePlugin({
+            NODE_ENV: process.env.NODE_ENV || JSON.stringify( 'production' ),
+        }),
     ],
     resolve: {
         alias: {

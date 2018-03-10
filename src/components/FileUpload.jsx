@@ -5,6 +5,7 @@ class FileUpload extends React.Component {
     constructor() {
         super();
         this.fileReader = new FileReader();
+        this.verifyUpload = this.verifyUpload.bind( this );
     }
 
     verifyUpload( evt ) {
@@ -12,14 +13,15 @@ class FileUpload extends React.Component {
         
         this.fileReader.onload = ( fileUpload ) => { 
             try {
-                console.log( 'this is the content:', JSON.parse( fileUpload.target.result ) );
+                const result = JSON.parse( fileUpload.target.result );
+                this.props.handleUpdate( result, 'info' );
             } catch( err ) {
-                console.log( 'this is the error:', err ); 
+                this.props.handleUpdate( err, 'error' );
             }
         };
 
         this.fileReader.onerror = ( fileUpload ) => {
-            console.log( 'error reading file', fileUpload );
+            this.props.handleUpdate( fileUpload, 'error' );
         };
 
         this.fileReader.readAsText( fileUpload );
@@ -32,7 +34,7 @@ class FileUpload extends React.Component {
                 id="json-file" 
                 name="json-file"
                 accept=".json,application/json" 
-                onChange={( e ) => this.verifyUpload( e )} />
+                onChange={ this.verifyUpload } />
         );
     }
 }
