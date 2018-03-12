@@ -35,7 +35,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Main',
+            title: 'JSON Editor',
             template: 'index.hbs',
         }),
         new webpack.DefinePlugin({

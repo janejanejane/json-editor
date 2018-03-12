@@ -4,9 +4,30 @@ class FileContent extends React.Component {
     
     constructor() {
         super();
+        this.state = {};
+        this.changeValue = this.changeValue.bind( this );
         this.formatContent = this.formatContent.bind( this );
         this.iterateContent = this.iterateContent.bind( this );
         this.showKeyValue = this.showKeyValue.bind( this );
+    }
+
+    componentWillReceiveProps( nextProps ) {
+        const { info } = nextProps;
+        const result = Object.assign( {}, info );
+
+        this.setState( ( prevState, props ) => {
+            return result;
+        } );
+    }
+
+    changeValue( evt, key ) {
+        const value = evt.target.value;
+
+        this.setState( ( prevState, props ) => {
+            return {
+                [key]: value,
+            };
+        } );
     }
 
     formatContent( content ) {
@@ -47,10 +68,14 @@ class FileContent extends React.Component {
 
         return (
             <div>
-                <label>{ key } : </label>
+                <label htmlFor={ key }>{ key } : </label>
                 {
                     ( typeof content[key] === 'string' )
-                        ? <input value={ content[ key ] } />
+                        ? <input 
+                            id={ key }
+                            onChange={ ( e ) => this.changeValue( e, key ) }
+                            value={ this.state[ key ] } 
+                            />
                         : this.formatContent( content[ key ] )
                 }
                 { ending }
