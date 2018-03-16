@@ -13,12 +13,13 @@ class FileContent extends React.Component {
         this.formatContent = this.formatContent.bind( this );
         this.iterateContent = this.iterateContent.bind( this );
         this.showKeyValue = this.showKeyValue.bind( this );
+        this.showLabel = this.showLabel.bind( this );
     }
 
     componentWillReceiveProps( nextProps ) {
         const { info } = nextProps;
         const result = Object.assign( {}, info );
-
+        
         this.setState( ( prevState, props ) => {
             return {
                 content: result
@@ -28,7 +29,7 @@ class FileContent extends React.Component {
 
     changeValue( evt, key ) {
         const value = evt.target.value;
-
+        
         this.setState( ( prevState, props ) => {
             return {
                 content: {
@@ -38,12 +39,17 @@ class FileContent extends React.Component {
         } );
     }
 
-    formatContent( content, parentKey ) {
+    formatContent( content, key ) {
         const contentType = typeof content;
         let opening = <span>&#123;</span>; // show {
         let closing = <span>&#125;</span>; // show }
 
         if ( contentType === 'object' ) {
+
+            if( key !== undefined ) {
+                opening = `${key}: {`;
+            }
+
             if ( Array.isArray( content ) ) {
                 opening = <span>&#91;</span>; // show [
                 closing = <span>&#93;</span>; // show ]
@@ -51,7 +57,7 @@ class FileContent extends React.Component {
 
             return [
                 opening,
-                this.iterateContent( content, parentKey ),
+                this.iterateContent( content, key ),
                 closing
             ];
         } else if ( contentType === 'boolean' || contentType === 'number' ) {
@@ -59,23 +65,25 @@ class FileContent extends React.Component {
         }
     }
 
-    iterateContent( content, parentKey ) {
+    iterateContent( content, outerKey ) {
         const contentKeys = Object.keys( content );
-
+        
         return contentKeys.map( ( key, index ) => {
+
+            // if key is 'parentKey', don't include in display
+            if ( key === 'parentKey' ) return;
+
             // if content is not an array and the value is an object, iterate through it
             if (  typeof content[ key ] === 'object' ) {
-                if ( !content.hasOwnProperty( 'parentKey' ) ) {
-                    content[ 'parentKey' ] = key;
-                }
-                
                 return this.formatContent( content[ key ], key );
+
             // if the value is a primary data type, render it
             } else {
-                if ( parentKey ) {
-                    content[parentKey] = `${parentKey}.${key}`;
-                    return this.showKeyValue( content, key, content[parentKey] );   
+                if ( outerKey ) {
+                    content[ 'parentKey' ] = outerKey;
+                    return this.showKeyValue( content, key, content[ 'parentKey' ] );   
                 }
+                
                 return this.showKeyValue( content, key );
             }
         } );
@@ -83,11 +91,11 @@ class FileContent extends React.Component {
 
     showKeyValue( content, key, parentKey ) {
         const ending = <span>&#44;</span>; // show ,
-        const value = ( parentKey ) ? get( this.state.content, parentKey ) : this.state.content[ key ];
+        const value = ( parentKey ) ? get( this.state.content, `${parentKey}.${key}` ) : this.state.content[ key ];
 
         return (
             <div>
-                <label htmlFor={ key }>{ key } : </label>
+                { this.showLabel( key ) }
                 {
                     ( typeof content[key] === 'string' )
                         ? <input 
@@ -100,6 +108,10 @@ class FileContent extends React.Component {
                 { ending }
             </div>
         )
+    }
+
+    showLabel( key ) {
+        return <label htmlFor={ key }>{ key } : </label>;
     }
 
     render() {
