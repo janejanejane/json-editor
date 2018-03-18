@@ -14,6 +14,7 @@ class FileContent extends React.Component {
         this.iterateContent = this.iterateContent.bind( this );
         this.showKeyValue = this.showKeyValue.bind( this );
         this.showLabel = this.showLabel.bind( this );
+        this.showValue = this.showValue.bind( this );
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -41,18 +42,16 @@ class FileContent extends React.Component {
 
     formatContent( content, key ) {
         const contentType = typeof content;
-        let opening = <span>&#123;</span>; // show {
-        let closing = <span>&#125;</span>; // show }
+        const keyValue = ( key !== undefined ) ? `${key}:` : null;
+        let opening = <div>{keyValue} &#123;</div>; // show {key|null}: {
+        let closing = <div>&#125;</div>; // show }
 
         if ( contentType === 'object' ) {
 
-            if( key !== undefined ) {
-                opening = `${key}: {`;
-            }
-
             if ( Array.isArray( content ) ) {
-                opening = <span>&#91;</span>; // show [
-                closing = <span>&#93;</span>; // show ]
+                opening = <div>{keyValue} &#91;</div>; // show {key|null}: [
+                closing = <div>&#93;</div>; // show ]
+    
             }
 
             return [
@@ -60,8 +59,6 @@ class FileContent extends React.Component {
                 this.iterateContent( content, key ),
                 closing
             ];
-        } else if ( contentType === 'boolean' || contentType === 'number' ) {
-            return content.toString();
         }
     }
 
@@ -91,18 +88,14 @@ class FileContent extends React.Component {
 
     showKeyValue( content, key, parentKey ) {
         const ending = <span>&#44;</span>; // show ,
-        const value = ( parentKey ) ? get( this.state.content, `${parentKey}.${key}` ) : this.state.content[ key ];
+        const value = ( parentKey ) ? get( this.state.content, [ parentKey, key ] ) : this.state.content[ key ];
 
         return (
             <div>
                 { this.showLabel( key ) }
                 {
-                    ( typeof content[key] === 'string' )
-                        ? <input 
-                            id={ key }
-                            onChange={ ( e ) => this.changeValue( e, key ) }
-                            value={ value } 
-                            />
+                    ( typeof content[key] !== 'object' )
+                        ? this.showValue( key, value )
                         : this.formatContent( content[ key ] )
                 }
                 { ending }
@@ -112,6 +105,14 @@ class FileContent extends React.Component {
 
     showLabel( key ) {
         return <label htmlFor={ key }>{ key } : </label>;
+    }
+
+    showValue( key, value ) {
+        return <input 
+                id={ key }
+                onChange={ ( e ) => this.changeValue( e, key ) }
+                value={ value } 
+            />;
     }
 
     render() {
