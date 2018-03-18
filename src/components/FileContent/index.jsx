@@ -6,7 +6,7 @@ class FileContent extends React.Component {
     constructor() {
         super();
         this.state = {
-            parentKey: {},
+            changed: false,
             content: {},
         };
         this.changeValue = this.changeValue.bind( this );
@@ -15,6 +15,8 @@ class FileContent extends React.Component {
         this.showKeyValue = this.showKeyValue.bind( this );
         this.showLabel = this.showLabel.bind( this );
         this.showValue = this.showValue.bind( this );
+        this.showSaveChangesButton = this.showSaveChangesButton.bind( this );
+        this.saveJSONChanges = this.saveJSONChanges.bind( this );
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -32,6 +34,18 @@ class FileContent extends React.Component {
         const value = evt.target.value;
         
         this.setState( ( prevState, props ) => {
+
+            // change the status of the changed state when at least one value is updated
+            if ( !prevState.changed ) {
+                return {
+                    changed: true,
+                    content: {
+                        [key]: value,
+                    },
+                }
+            }
+
+            // only change the content
             return {
                 content: {
                     [key]: value,
@@ -91,7 +105,7 @@ class FileContent extends React.Component {
         const value = ( parentKey ) ? get( this.state.content, [ parentKey, key ] ) : this.state.content[ key ];
 
         return (
-            <div>
+            <div className="row">
                 { this.showLabel( key ) }
                 {
                     ( typeof content[key] !== 'object' )
@@ -104,23 +118,37 @@ class FileContent extends React.Component {
     }
 
     showLabel( key ) {
-        return <label htmlFor={ key }>{ key } : </label>;
+        return <label className="col m3" htmlFor={ key }>{ key } : </label>;
     }
 
     showValue( key, value ) {
         return <input 
+                className="col m5"
                 id={ key }
                 onChange={ ( e ) => this.changeValue( e, key ) }
                 value={ value } 
             />;
     }
 
+    showSaveChangesButton() {
+        return <button className="utility _floatRight" onClick={ this.saveJSONChanges }>Save Changes</button>
+    }
+
+    saveJSONChanges() {
+        console.log( 'inside saveJSONChanges' );
+        return;
+    }
+
     render() {
         const { info } = this.props;
 
         return (
-            <div>
-                {info ? this.formatContent( info ) : null}
+            <div className="col m3-5">
+                { info ? this.formatContent( info ) : null }
+                { ( this.state.changed )
+                    ? this.showSaveChangesButton()
+                    : null 
+                }
             </div>
         );
     }

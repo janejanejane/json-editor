@@ -39,9 +39,28 @@ class Main extends React.Component {
     render() {
         return (
             <div>
-                This is Main.
-                <FileUpload handleUpdate={ this.handleUpdate  } />
-                <FileContent info={ this.state.info } />
+                <div className="jumbo _teal">
+                    <h3>Welcome!</h3>
+                    <p>This is a simple utility tool for editing your JSON files.</p>
+                    <p><small>It is working for simple files and is still a work-in-progress.</small></p>
+                </div>
+                <form>
+                    <fieldset>
+                        <legend>Upload JSON file:</legend>
+                        <div className="row">
+                            <div className="col m2-5"></div>
+                            <div className="col m1-5">
+                                <FileUpload handleUpdate={ this.handleUpdate  } />
+                            </div>
+                            <div className="col m2-5"></div>
+                        </div>
+                    </fieldset>
+                </form>
+                <div className="row">
+                    <div className="col m1-5"></div>
+                        <FileContent info={ this.state.info } />
+                    <div className="col m1-5"></div>
+                </div>
                 <Error msg={ this.state.error } />
             </div>
         );
