@@ -1,5 +1,6 @@
 import React from 'react';
 import get from 'lodash/get';
+import FileSaver from 'file-saver';
 
 class FileContent extends React.Component {
     
@@ -35,21 +36,22 @@ class FileContent extends React.Component {
         
         this.setState( ( prevState, props ) => {
 
+            const content = {
+                ...prevState.content,
+                [key]: value,
+            };
+
             // change the status of the changed state when at least one value is updated
             if ( !prevState.changed ) {
                 return {
                     changed: true,
-                    content: {
-                        [key]: value,
-                    },
+                    content,
                 }
             }
 
             // only change the content
             return {
-                content: {
-                    [key]: value,
-                },
+                content,
             };
         } );
     }
@@ -131,12 +133,26 @@ class FileContent extends React.Component {
     }
 
     showSaveChangesButton() {
-        return <button className="utility _floatRight" onClick={ this.saveJSONChanges }>Save Changes</button>
+        return <a className="button utility _floatRight _primary _large" onClick={ ( e ) => this.saveJSONChanges( e ) }>Save Changes</a>
     }
 
-    saveJSONChanges() {
-        console.log( 'inside saveJSONChanges' );
-        return;
+    saveJSONChanges( evt ) {
+        evt.preventDefault();
+        const data = JSON.stringify( this.state.content, null, 4);
+        const blob = new Blob(
+            [ data ], 
+            {
+                type: 'application/json;charset=utf-8',
+            },
+        );
+        FileSaver.saveAs( blob, 'changed file.json' );
+
+        // change the state to unchanged after download
+        this.setState( ( prevState, props ) => {
+            return {
+                changed: false,
+            };
+        } );
     }
 
     render() {

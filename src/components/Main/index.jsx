@@ -42,7 +42,9 @@ class Main extends React.Component {
                 <div className="jumbo _teal">
                     <h3>Welcome!</h3>
                     <p>This is a simple utility tool for editing your JSON files.</p>
-                    <p><small>It is working for simple files and is still a work-in-progress.</small></p>
+                    <p>
+                        <i>It is working for non-nested files and is still a work-in-progress.</i>
+                    </p>
                 </div>
                 <form>
                     <fieldset>

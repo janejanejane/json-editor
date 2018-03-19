@@ -1,11 +1,15 @@
 import React from 'react';
 
 const Error = ( { msg } ) => {
-    return (
-        <div>
+    const errorDiv = (
+        <div class="_danger _xlarge">
             {msg}
-        </div>
+        </div> 
     );
+    
+    return ( msg )
+        ? errorDiv
+        : null;
 };
 
 export default Error;
