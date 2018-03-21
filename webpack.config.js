@@ -21,13 +21,16 @@ module.exports = {
                 use: ['babel-loader'],
             },
             {
-                test: /(\.css)$/,
+                test: /(\.(s*)css)$/,
                 use: [
                     {
                         loader: 'style-loader'
                     }, 
                     {
                         loader: 'css-loader'
+                    }, 
+                    {
+                        loader: 'sass-loader'
                     }
                 ],
             },
@@ -47,6 +50,6 @@ module.exports = {
             Components: path.resolve( __dirname, 'src', 'components' ),
             Styles: path.resolve( __dirname, 'src', 'styles' ),
         },
-        extensions: ['.js', '.jsx', '.css'],
+        extensions: ['.js', '.jsx', '.css', '.scss'],
     },
 };

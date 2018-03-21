@@ -133,7 +133,7 @@ class FileContent extends React.Component {
     }
 
     showSaveChangesButton() {
-        return <a className="button utility _floatRight _primary _large" onClick={ ( e ) => this.saveJSONChanges( e ) }>Save Changes</a>
+        return <a className="button is-primary" onClick={ ( e ) => this.saveJSONChanges( e ) }>Save Changes</a>
     }
 
     saveJSONChanges( evt ) {
@@ -159,7 +159,7 @@ class FileContent extends React.Component {
         const { info } = this.props;
 
         return (
-            <div className="col m3-5">
+            <div className="content">
                 { info ? this.formatContent( info ) : null }
                 { ( this.state.changed )
                     ? this.showSaveChangesButton()

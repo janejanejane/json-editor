@@ -30,6 +30,7 @@ class FileUpload extends React.Component {
     render() {
         return (
             <input 
+                className="file-input"
                 type="file" 
                 id="json-file" 
                 name="json-file"
