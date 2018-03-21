@@ -40,6 +40,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'JSON Editor',
             template: 'index.hbs',
+            hash: true,
         }),
         new webpack.DefinePlugin({
             NODE_ENV: process.env.NODE_ENV || JSON.stringify( 'production' ),
