@@ -133,7 +133,15 @@ class FileContent extends React.Component {
     }
 
     showSaveChangesButton() {
-        return <a className="button is-primary" onClick={ ( e ) => this.saveJSONChanges( e ) }>Save Changes</a>
+        return (
+            <div class="is-pulled-right">
+                <a 
+                    className="button is-primary" 
+                    onClick={ ( e ) => this.saveJSONChanges( e ) }>
+                        Save Changes
+                </a>
+            </div>
+        );
     }
 
     saveJSONChanges( evt ) {
@@ -161,7 +169,7 @@ class FileContent extends React.Component {
         return (
             <div className="content">
                 { info ? this.formatContent( info ) : null }
-                { ( this.state.changed )
+                { ( info && this.state.changed )
                     ? this.showSaveChangesButton()
                     : null 
                 }

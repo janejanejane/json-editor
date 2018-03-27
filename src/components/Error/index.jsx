@@ -2,9 +2,11 @@ import React from 'react';
 
 const Error = ( { msg } ) => {
     const errorDiv = (
-        <div class="_danger _xlarge">
-            {msg}
-        </div> 
+        <article class="message is-danger">
+            <div class="message-body">
+                {msg}
+            </div>
+        </article>
     );
     
     return ( msg )

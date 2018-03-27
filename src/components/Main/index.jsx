@@ -76,7 +76,7 @@ class Main extends React.Component {
                         </div>
                     </fieldset>
                 </form> */}
-                <div className="container">
+                <div className="columns is-centered">
                     <FileContent info={ this.state.info } />
                 </div>
                 <Error msg={ this.state.error } />
